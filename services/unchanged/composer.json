@@ -1,0 +1,8 @@
+{
+    "require": {
+        "kreait/firebase-php": "^5.26",
+        "nesbot/carbon": "^3.10",
+        "google/apiclient": "^2.18",
+        "monolog/monolog": "^3.0"
+    }
+}

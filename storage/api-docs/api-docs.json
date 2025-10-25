@@ -1,0 +1,218 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Bidding API",
+        "description": "برنامج المزايدات",
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/RegisterUser": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "تسجيل مستخدم جديد",
+                "description": "يقوم بتسجيل مستخدم جديد ويتحقق من نسخة التطبيق",
+                "operationId": "registerUser",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "userName",
+                                    "userEmail",
+                                    "userPassword",
+                                    "userGender",
+                                    "userNumber",
+                                    "appVersion"
+                                ],
+                                "properties": {
+                                    "userName": {
+                                        "type": "string",
+                                        "example": "ahmad"
+                                    },
+                                    "userEmail": {
+                                        "type": "string",
+                                        "example": "ahmad@example.com"
+                                    },
+                                    "userPassword": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "userGender": {
+                                        "type": "string",
+                                        "example": "Male"
+                                    },
+                                    "userNumber": {
+                                        "type": "string",
+                                        "example": "+963990000000"
+                                    },
+                                    "userFcmToken": {
+                                        "type": "string",
+                                        "example": "fcm_token_optional"
+                                    },
+                                    "appVersion": {
+                                        "type": "string",
+                                        "example": "1.0.0"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "تم تسجيل المستخدم بنجاح"
+                    },
+                    "426": {
+                        "description": "يجب تحديث التطبيق"
+                    },
+                    "500": {
+                        "description": "خطأ داخلي أثناء التسجيل"
+                    }
+                }
+            }
+        },
+        "/api/product": {
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "إنشاء منتج جديد مع مزايدة",
+                "description": "إرسال بيانات المنتج والمزايدة وتخزينها",
+                "operationId": "storeProduct",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "images[]": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    },
+                                    "data": {
+                                        "description": "بيانات JSON مشفرة على شكل string",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "تمت العملية بنجاح"
+                    },
+                    "422": {
+                        "description": "خطأ في التحقق من البيانات"
+                    },
+                    "500": {
+                        "description": "خطأ داخلي في السيرفر"
+                    }
+                }
+            }
+        },
+        "/api/fetch-Products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Fetch products with filters and pagination",
+                "operationId": "286a346da9b5b5b361f100915d5e8f41",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search term for product title",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "productCategory",
+                        "in": "query",
+                        "description": "Category ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Pagination offset",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "User ID making the request",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sortBy",
+                        "in": "query",
+                        "description": "Sort option: recently added, time remaining, importance: high to low, importance: low to high",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "Status": {
+                                            "type": "string"
+                                        },
+                                        "Result": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameters"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Products",
+            "description": "Products"
+        }
+    ]
+}
