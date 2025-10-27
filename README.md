@@ -37,10 +37,10 @@ This backend powers a **Flutter-based auction app**. Key features include:
     ✅ Admin Approval System:
 -   Special admin panel for approving new products  
     ✅ Cron Jobs:
--   Auto-delete unused tokens after 2 months  
+-   Auto-delete unused tokens after a months  
     ✅ Laravel Scheduled Task:
 -   Continuously check ended auctions & trigger Firebase notifications  
-    ✅ Organized HTTP folder structure (Select, Update, Delete...)  
+    ✅ Organized and scalable HTTP layer, with Controllers structured into dedicated modules such as Admin, Auth, Delete, Insert, Notifications, Select, Services, and Update, where each directory contains feature-specific controllers to maintain clean separation of responsibilities and improve maintainability.
     ✅ Role Management (User / Admin)  
     ✅ Secure API with middleware + token validation
 
@@ -48,27 +48,40 @@ This backend powers a **Flutter-based auction app**. Key features include:
 
 ## 📂 Project Structure
 
+```bash
 app/
 ├─ Http/
-│ ├─ Controllers/
-│ ├─ Requests/
-│
+│  ├─ Controllers/
+│  │  ├─ Admin/
+│  │  ├─ Auth/
+│  │  ├─ Delete/
+│  │  ├─ Insert/
+│  │  ├─ Notifications/
+│  │  ├─ Select/
+│  │  ├─ Services/
+│  │  ├─ Update/
+│  ├─ Requests/
+
 ├─ Services/
-│ ├─ cron jobs & background tasks
-│
+│  ├─ cron jobs & background tasks
+
 ├─ Models/
 ├─ Notifications/
 ├─ Console/
-│ ├─ Kernel.php → scheduled auction status checks
+│  ├─ Kernel.php → scheduled auction status checks
+
 routes/
 ├─ api.php → product, auctions, bidding API
+
 public/
 ├─ Admin page for product approval
 ├─ Views for:
-│ - Password reset
-│ - Email verification
+│  - Password reset
+│  - Email verification
+
 resources/
 ├─ views/ (Blade templates for reset/verify pages)
+```
 
 ---
 
