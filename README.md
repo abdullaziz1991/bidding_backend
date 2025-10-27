@@ -23,6 +23,157 @@ This backend powers a **Flutter-based auction app**. Key features include:
 
 ---
 
+## 🚀 Features
+
+✅ User Authentication (Register, Login, Logout)  
+✅ Email Verification & Password Reset via secure links  
+✅ Auction Listing – Add, Edit, Delete products  
+✅ Real-time Auction Bidding System  
+✅ Firebase Push Notifications:
+
+-   Notify auction winner when bidding ends
+-   Notify product owner with winner details  
+    ✅ Profile Update (image, name, contact info…)  
+    ✅ Admin Approval System:
+-   Special admin panel for approving new products  
+    ✅ Cron Jobs:
+-   Auto-delete unused tokens after 2 months  
+    ✅ Laravel Scheduled Task:
+-   Continuously check ended auctions & trigger Firebase notifications  
+    ✅ Organized HTTP folder structure (Select, Update, Delete...)  
+    ✅ Role Management (User / Admin)  
+    ✅ Secure API with middleware + token validation
+
+---
+
+## 📂 Project Structure
+
+app/
+├─ Http/
+│ ├─ Controllers/
+│ ├─ Requests/
+│
+├─ Services/
+│ ├─ cron jobs & background tasks
+│
+├─ Models/
+├─ Notifications/
+├─ Console/
+│ ├─ Kernel.php → scheduled auction status checks
+routes/
+├─ api.php → product, auctions, bidding API
+public/
+├─ Admin page for product approval
+├─ Views for:
+│ - Password reset
+│ - Email verification
+resources/
+├─ views/ (Blade templates for reset/verify pages)
+
+---
+
+## 🔐 Authentication
+
+-   Token-based authentication
+-   Secure password hashing
+-   Email verification using signed URL links
+-   Password reset using secure token page hosted on backend
+
+---
+
+## 🔔 Firebase Notifications Workflow
+
+1️⃣ Cron Job checks auctions that ended  
+2️⃣ Determine the highest bidder (winner)  
+3️⃣ Notify:
+
+-   Winner → seller phone number
+-   Seller → winner details  
+    4️⃣ Update auction status & finalize transaction
+
+---
+
+## 📡 API Highlights
+
+| Category | Actions                                            |
+| -------- | -------------------------------------------------- |
+| Products | Add, Edit, Delete, Show all, Show single           |
+| Auctions | Live bidding, Winner notifications                 |
+| Users    | Profile update, Auth, Verification, Password reset |
+| Admin    | Approve new uploaded products                      |
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology                    | Purpose                |
+| ----------------------------- | ---------------------- |
+| Laravel 11                    | Backend framework      |
+| MySQL                         | Database               |
+| Firebase Cloud Messaging      | Notifications          |
+| Laravel Scheduler & Cron Jobs | Background tasks       |
+| REST API                      | Mobile app integration |
+
+---
+
+## ▶️ Installation
+
+```bash
+git clone https://github.com/YourRepo/Auction-Backend.git
+cd Auction-Backend
+composer install
+cp .env.example .env
+php artisan key:generate
+
+## 🛠️ Environment Variables Example
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=auction_db
+DB_USERNAME=root
+DB_PASSWORD=
+
+FIREBASE_SERVER_KEY=your_server_key_here
+MAIL_MAILER=smtp
+MAIL_HOST=your_mail_server
+MAIL_USERNAME=your_email
+MAIL_PASSWORD=your_password
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=your_email
+
+## 💡 Future Improvements
+
+Real-time WebSocket bidding
+
+Advanced admin dashboard
+
+Analytics for completed auctions
+
+## 📞 Contact
+
+If you have any questions or would like to collaborate:
+Developer: Abdulaziz Hallak
+📧 Email: your-email@example.com
+
+🌐 GitHub: https://github.com/your-profile
+
+## ⭐ Contributions
+
+Pull requests are always welcome!
+If you like this project, please ⭐ the repository ❤️
+
+
+
+
+
+
+
+
+
+
+
+
 ## ⚙️ Key Features
 
 -   **Product Management**: Create, edit, delete, and view products
@@ -63,7 +214,41 @@ Auction expiration check: Scan bids table, find ended auctions, notify winner an
 
 Implementation: Laravel Jobs triggered via Cron Jobs
 
----
+protected function schedule(Schedule $schedule)
+
+class ProcessExpiredBiddings extends Command
+{
+/\*\*
+_ The name and signature of the console command.
+_
+_ @var string
+_/
+// protected $signature = 'app:process-expired-biddings';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    // protected $description = 'Command description';
+
+    /**
+     * Execute the console command.
+     */
+
+
+      protected $signature = 'bidding:process';
+    protected $description = 'Process expired biddings and notify users';
+
+    public function handle(BiddingService $biddingService)
+    {
+        $biddingService->processExpiredBiddings();
+        $this->info('Expired biddings processed successfully.');
+    }
+
+}
+
+## Schedule::command('bidding:process')->everyMinute();
 
 ## 📩 Email Notifications
 
@@ -86,3 +271,19 @@ Validation for all requests to prevent unauthorized changes
 Token-based authentication (Passport / Sanctum recommended)
 
 ---
+
+## 📂 Project Structure
+
+app/
+├─ Http/
+│ ├─ Controllers/
+│ │ ├─ Select/ # Fetch data endpoints
+│ │ ├─ Update/ # Update product/user endpoints
+│ │ ├─ Delete/ # Delete product endpoints
+├─ Services/ # Cron jobs and background services
+├─ Models/ # Eloquent models
+├─ Jobs/ # Laravel jobs for async tasks
+routes/
+├─ api.php # API routes
+config/
+```
