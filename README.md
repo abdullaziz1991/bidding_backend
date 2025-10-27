@@ -81,13 +81,13 @@ This backend powers a **Flutter-based auction app**. Key features include:
 
 ## 📩 Email Notifications
 
-Account activation links
+-   Account activation links
 
-Password reset links
+-   Password reset links
 
-Admin notifications for product approvals
+-   Admin notifications for product approvals
 
-Emails sent via Laravel Mail and configurable SMTP
+-   Emails sent via Laravel Mail and configurable SMTP
 
 ---
 
