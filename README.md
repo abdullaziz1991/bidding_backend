@@ -9,6 +9,18 @@
 
 ---
 
+## 🛠️ Tech Stack
+
+| Technology                    | Purpose                |
+| ----------------------------- | ---------------------- |
+| Laravel 12                    | Backend framework      |
+| MySQL                         | Database               |
+| Firebase Cloud Messaging      | Notifications          |
+| Laravel Scheduler & Cron Jobs | Background tasks       |
+| REST API                      | Mobile app integration |
+
+---
+
 ## 🎯 Project Overview
 
 This backend powers a **Flutter-based auction app**. Key features include:
@@ -43,6 +55,39 @@ This backend powers a **Flutter-based auction app**. Key features include:
     ✅ Organized and scalable HTTP layer, with Controllers structured into dedicated modules such as Admin, Auth, Delete, Insert, Notifications, Select, Services, and Update, where each directory contains feature-specific controllers to maintain clean separation of responsibilities and improve maintainability.
     ✅ Role Management (User / Admin)  
     ✅ Secure API with middleware + token validation
+
+---
+
+## 🔐 Security & Authentication
+
+-   Token-based authentication
+-   Secure password hashing
+-   Email verification using signed URL links
+-   Password reset using secure token page hosted on backend
+
+---
+
+## 🔔 Firebase Notifications Workflow
+
+1️⃣ Cron Job checks auctions that ended  
+2️⃣ Determine the highest bidder (winner)  
+3️⃣ Notify:
+
+-   Winner → seller phone number
+-   Seller → winner details  
+    4️⃣ Update auction status & finalize transaction
+
+---
+
+## 📩 Email Notifications
+
+Account activation links
+
+Password reset links
+
+Admin notifications for product approvals
+
+Emails sent via Laravel Mail and configurable SMTP
 
 ---
 
@@ -131,51 +176,6 @@ resources/
 
 ---
 
-## 🔐 Authentication
-
--   Token-based authentication
--   Secure password hashing
--   Email verification using signed URL links
--   Password reset using secure token page hosted on backend
-
----
-
-## 🔔 Firebase Notifications Workflow
-
-1️⃣ Cron Job checks auctions that ended  
-2️⃣ Determine the highest bidder (winner)  
-3️⃣ Notify:
-
--   Winner → seller phone number
--   Seller → winner details  
-    4️⃣ Update auction status & finalize transaction
-
----
-
-## 📩 Email Notifications
-
-Account activation links
-
-Password reset links
-
-Admin notifications for product approvals
-
-Emails sent via Laravel Mail and configurable SMTP
-
----
-
-## 🛠️ Tech Stack
-
-| Technology                    | Purpose                |
-| ----------------------------- | ---------------------- |
-| Laravel 12                    | Backend framework      |
-| MySQL                         | Database               |
-| Firebase Cloud Messaging      | Notifications          |
-| Laravel Scheduler & Cron Jobs | Background tasks       |
-| REST API                      | Mobile app integration |
-
----
-
 ## ▶️ Installation
 
 ```bash
@@ -218,13 +218,5 @@ If you have any questions or would like to collaborate:
 
 Pull requests are always welcome!
 If you like this project, please ⭐ the repository ❤️
-
-## 🔑 Security & Access
-
-Middleware for user authentication and admin-only routes
-
-Validation for all requests to prevent unauthorized changes
-
-Token-based authentication (Passport / Sanctum recommended)
 
 ---
