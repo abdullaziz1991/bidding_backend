@@ -208,10 +208,11 @@ MAIL_FROM_ADDRESS="abdullaziz.hallak.1991@gmail.com"
 ## 📞 Contact
 
 If you have any questions or would like to collaborate:
-Developer: Abdulaziz Hallak
 
-📧 Email: abdullaziz.hallak.1991@gmail.com
-🌐 GitHub: https://github.com/abdullaziz1991/bidding_backend
+-   Developer: Abdulaziz Hallak
+
+-   📧 Email: abdullaziz.hallak.1991@gmail.com
+-   🌐 GitHub: https://github.com/abdullaziz1991/bidding_backend
 
 ## ⭐ Contributions
 
