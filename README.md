@@ -211,6 +211,8 @@ If you have any questions or would like to collaborate:
 
 -   Developer: Abdulaziz Hallak
 
+-   📱 WhatsApp: [ +963946618431 ](https://wa.me/963946618431)
+-   📞 Call: [ +963996597165 ](tel:+963996597165)
 -   📧 Email: abdullaziz.hallak.1991@gmail.com
 -   🌐 GitHub: https://github.com/abdullaziz1991/bidding_backend
 
