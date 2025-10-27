@@ -163,16 +163,7 @@ Developer: Abdulaziz Hallak
 Pull requests are always welcome!
 If you like this project, please ⭐ the repository ❤️
 
-
-
-
-
-
-
-
-
-
-
+```
 
 ## ⚙️ Key Features
 
@@ -286,4 +277,7 @@ app/
 routes/
 ├─ api.php # API routes
 config/
+
+```
+
 ```
