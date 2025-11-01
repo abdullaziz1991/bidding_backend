@@ -25,8 +25,6 @@ class VerificationController extends Controller
         if (!$user) {
             return response()->json(['error' => 'User not found'], 404);
         }
-
-        // إنشاء رابط التوثيق
         $verificationUrl = URL::temporarySignedRoute(
             'verification.verify',
             now()->addMinutes(30),
@@ -50,16 +48,6 @@ public function verify(Request $request, $id, $hash)
         return response()->json(['error' => 'Invalid verification link'], 400);
     }
 
-
-    //     // ✅ استدعاء ملف الخدمة
-    //      require_once base_path('services/Send_Email_Verification_Notification.php');
-    //     // ✅ استدعاء الدالة وتمرير الـ userId
-
-    // sendPushNotification(
-    // $user->userFcmToken, "تفعيل البريد الإلكتروني","تم تفعيل بريدك الإلكتروني بنجاح، اضغط على هذا الإشعار لإتمام التفعيل");
-
-   
-      
       if (!$user->email_verified_at) {
     $user->email_verified_at = now();
     $user->save();
@@ -71,10 +59,7 @@ public function verify(Request $request, $id, $hash)
         "Your email has been successfully verified"
     );
 }
-
    $user->tokens()->delete();
-
     return view('verify_success'); // 👈 يرجع الصفحة الجميلة
 }
-
 }

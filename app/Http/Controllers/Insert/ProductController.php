@@ -75,12 +75,9 @@ class ProductController extends Controller
 
             $validator = Validator::make($jsonData, [
                 'sellerId' => 'required|integer',
-                // 'sellerNumber' => 'required|string',
                 'productCategory' => 'required|integer',
                 'productTitle' => 'required|string',
                 'productDetails' => 'required|string',
-                // 'productImage' => 'required|string',
-                // 'productImageNumber' => 'required|integer',
                 'productPrice' => 'required|numeric',
                 'productStatus' => 'required|string',
                 'productStatusRatio' => 'required|numeric',
@@ -98,40 +95,22 @@ class ProductController extends Controller
             }
 
             $data = $validator->validated();
-            // 
-
-            // foreach ($request->file('images') as $image) {
-            //     // حفظ الصورة في مجلد "productImages" داخل القرص "public"
-            //     $path = $image->store('productImages', 'public'); // الناتج: productImages/abc123.jpg
-            //     // $uploadedPaths2[] = asset('storage/' . str_replace('public/', '', $path));
-            //     // استخراج فقط اسم الملف مع المجلد
-            //     $uploadedPaths[] = $path; // فقط productImages/abc123.jpg
-            // }
             $uploadedPaths = [];
 
             foreach ($request->file('images') as $image) {
-                // حفظ الصورة في مجلد "productImages" داخل القرص "public"
                 $path = $image->store('productImages', 'public'); // مثل: productImages/abc123.jpg
-
-                // استخراج فقط اسم الصورة (abc123.jpg) بدون المجلد
                 $uploadedPaths[] = basename($path);
             }
 
             $productDateTime = Carbon::now('Asia/Damascus');
-            //  $productDateTime =Carbon::now('Asia/Damascus')->addHours(3);
             $biddingEndDate = $productDateTime->copy()->addDays((int) $data['biddingDays']);
-
             $product = Product::create([
                 'sellerId' => $data['sellerId'],
-                // 'sellerNumber' => $data['sellerNumber'],
                 'productCategory' => $data['productCategory'],
                 'productTitle' => $data['productTitle'],
                 'productDetails' => $data['productDetails'],
-                // 'productImage' => $data['productImage'],
                 'productImage' =>  json_encode($uploadedPaths),
-                // 'productImageNumber' => $data['productImageNumber'],
                 'productPrice' => $data['productPrice'],
-                // 'productDateTime' => $productDateTime,
                 'productStatus' => $data['productStatus'],
                 'productStatusRatio' => $data['productStatusRatio'],
                 'productAmount' => $data['productAmount'],
@@ -151,8 +130,7 @@ class ProductController extends Controller
                  'bid_time'      => $bid['bid_time'] ?? now()->toIso8601String(),
                    ];
                   }
-            
-            
+
 
             Bidding::create([
                 'product_id' => $product->productId,
@@ -162,13 +140,8 @@ class ProductController extends Controller
                 'biddingDays' => $data['biddingDays'],
                 'biddingEndDate' => $biddingEndDate,
             ]);
-
-            // $sellerId = $data['sellerId'];
             $personalList = $data['personalList'];
-            // إضافة المنتج إلى بداية القائمة
             array_unshift($personalList,$product->productId);
-
-            // تحديث المستخدم
             DB::table('users')
                 ->where('id',  $data['sellerId'])
                 ->update(['personalList' => json_encode($personalList)]);

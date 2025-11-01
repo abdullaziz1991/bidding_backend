@@ -16,8 +16,6 @@ class LoginController extends Controller
     public function login(LoginRequest $request): \Illuminate\Http\JsonResponse
     {
         $versionFilePath = 'json/AppVersion.json';
-
-        // 🔹 التأكد من وجود الملف وقراءته
         if (!Storage::disk('public')->exists($versionFilePath)) {
             return response()->json(['message' => 'Version file not found.'], 500);
         }
@@ -31,31 +29,21 @@ class LoginController extends Controller
 
         $latestVersion = $versionData['latest_version'];
         $updateUrl = $versionData['update_url'];
-
-        // 🔹 مقارنة نسخة التطبيق
         if ($request->has('appVersion') && $request->appVersion !== $latestVersion) {
             return response()->json([
                 'message' => 'Please update your app to continue.',
                 'update_url' => $updateUrl,
-            ], 426); // 426 Upgrade Required
+            ], 426);
         }
-
-        // 🔹 التحقق من بيانات الدخول
         $user = User::where('userEmail', $request->userEmail)->first();
-
         if (! $user || ! Hash::check($request->userPassword, $user->userPassword)) {
             return response()->json(['message' => 'Invalid credentials.'], 401);
         }
-
-        // ✅ تحديث حقل userFcmToken إذا تم إرساله
         if ($request->has('userFcmToken')) {
             $user->userFcmToken = $request->userFcmToken;
             $user->save();
         }
-
-        // 🔹 إنشاء التوكن
         $token = $user->createToken('auth_token')->plainTextToken;
-
         return response()->json([
             'message' => 'Login successful.',
             'access_token' => $token,

@@ -13,7 +13,6 @@ class AddRatingController extends Controller
     public function updateRating(Request $request)
     {
         try {
-            // ✅ التحقق من صحة البيانات المدخلة
             $validator = Validator::make($request->all(), [
                 'evaluatedId' => 'required|integer',
                 'evaluatesId' => 'required|integer',
@@ -29,10 +28,7 @@ class AddRatingController extends Controller
             $evaluatedId = $request->input('evaluatedId');
             $evaluatesId = $request->input('evaluatesId');
             $evaluationValue = $request->input('evaluationValue');
-
-            // ✅ جلب المستخدم
             $user = DB::table('users')->where('id', $evaluatedId)->first();
-
             if (!$user) {
                 return response()->json(['Status' => "User not found"], 404);
             }
@@ -41,8 +37,6 @@ class AddRatingController extends Controller
             if (!is_array($userRatingList)) {
                 $userRatingList = [];
             }
-
-            // ✅ التحقق من وجود تقييم سابق
             $found = false;
             foreach ($userRatingList as &$rating) {
                 if ($rating['evaluatesId'] === $evaluatesId) {
@@ -64,8 +58,6 @@ class AddRatingController extends Controller
                     'evaluationValue' => $evaluationValue
                 ];
             }
-
-            // ✅ حساب المتوسط الجديد
             $totalRating = array_sum(array_column($userRatingList, 'evaluationValue'));
             $ratingCount = count($userRatingList);
             $newAverageRating = $ratingCount > 0 ? round($totalRating / $ratingCount, 2) : 0;

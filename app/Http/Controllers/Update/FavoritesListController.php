@@ -11,7 +11,6 @@ class FavoritesListController extends Controller
     
 public function updateFavoritesList(Request $request)
 {
-    // التحقق من صحة البيانات
     $validator = Validator::make($request->all(), [
         'id' => 'required|integer|exists:users,id',
         'FavoritesList' => 'required|string',
@@ -26,8 +25,6 @@ public function updateFavoritesList(Request $request)
 
     $id = $request->input('id');
     $favoritesList = $request->input('FavoritesList');
-
-    // جلب المستخدم وتحديث القائمة
     $user = User::where('id', $id)->first();
 
     if (!$user) {

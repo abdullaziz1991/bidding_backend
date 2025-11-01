@@ -15,16 +15,11 @@ class ProfileController extends Controller
     {
         try {
             DB::beginTransaction();
-
-            // تحقق من الصورة الجديدة إن وُجدت
             $request->validate([
                 'images' => 'nullable|array',
                 'images.*' => 'image|max:2048',
             ]);
-
-            // فك ترميز بيانات JSON القادمة من الحقل 'data'
             $jsonData = json_decode($request->input('data'), true);
-
             $validator = Validator::make($jsonData, [
                 'id' => 'required|integer',
                 'userName' => 'required|string',
@@ -40,25 +35,19 @@ class ProfileController extends Controller
                     'errors' => $validator->errors()
                 ], 422);
             }
-
             $data = $validator->validated();
-
-            // معالجة الصورة الجديدة إن وُجدت
             $uploadedImage = null;
             if ($request->hasFile('images')) {
                 $image = $request->file('images')[0]; // أول صورة فقط
                 $path = $image->store('personalImages', 'public');
                 $uploadedImage = basename($path);
             }
-
-            // تحديث بيانات المستخدم
             $updateFields = [
                 'userName' => $data['userName'],
                 'userNumber' => $data['userNumber'],
                 'userGender' => $data['userGender'],
                 'userEmail' => $data['userEmail'],
             ];
-
             if ($uploadedImage) {
                 $updateFields['userImage'] = $uploadedImage;
             }
@@ -66,23 +55,19 @@ class ProfileController extends Controller
             $affected = DB::table('users')
                 ->where('id', $data['id'])
                 ->update($updateFields);
-
-            // حذف الصورة القديمة إن لم تكن صورة افتراضية ولم يتم استخدام نفس الاسم
             if ($uploadedImage && !in_array($data['oldImage'], ['Male_Image.jpg', 'Female_Image.jpg'])) {
                 $oldPath = public_path('storage/personalImages/' . basename($data['oldImage']));
                 if (File::exists($oldPath)) {
                     File::delete($oldPath);
                 }
             }
-
             DB::commit();
 
             if ($affected > 0) {
                 return response()->json([
                     'Status' => 'The operation succeeded',
                     'Result' => true,
-                    'newImage' => $uploadedImage,
-                    // 'updatedFields' => $updateFields
+                    'newImage' => $uploadedImage
                 ]);
             } else {
                 return response()->json(['Status' => 'No changes made or user not found']);

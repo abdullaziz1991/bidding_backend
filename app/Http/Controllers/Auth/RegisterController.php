@@ -54,7 +54,6 @@ class RegisterController extends Controller
     public function registerUser(RegisterRequest $request): JsonResponse
     {
         try {
-            // 🔹 تحميل ملف نسخة التطبيق
             $versionFilePath = 'json/AppVersion.json';
 
             if (!Storage::disk('public')->exists($versionFilePath)) {
@@ -67,8 +66,6 @@ class RegisterController extends Controller
             if (!$versionData || !isset($versionData['latest_version']) || !isset($versionData['update_url'])) {
                 return response()->json(['message' => 'Invalid version file format.'], 500);
             }
-
-            // 🔹 تحقق من نسخة التطبيق
             $clientAppVersion = $request->input('appVersion');
             $latestVersion = $versionData['latest_version'];
             $updateUrl = $versionData['update_url'];
@@ -79,8 +76,6 @@ class RegisterController extends Controller
                     'update_url' => $updateUrl,
                 ], 426); // 426 Upgrade Required
             }
-
-            // ✅ إنشاء المستخدم مع userFcmToken إن وُجد
             $user = User::create([
                 'userName' => $request->userName ?? 'user',
                 'userEmail' => $request->userEmail,
@@ -90,9 +85,7 @@ class RegisterController extends Controller
                 'userFcmToken' => $request->userFcmToken ?? null, // 🔸 هنا الإضافة
             ]);
 
-            // 🔹 إنشاء التوكن
             $token = $user->createToken('auth_token')->plainTextToken;
-
           DB::table('notifications')->insert([
              'user_id'   =>  $user->id,
              'content'   => json_encode([]), 
@@ -113,6 +106,4 @@ class RegisterController extends Controller
             ], 500);
         }
     }
-
-
 }

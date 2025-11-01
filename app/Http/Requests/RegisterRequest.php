@@ -29,10 +29,3 @@ class RegisterRequest extends FormRequest
         ];
     }
 }
-
-     // 'userImage' => 'nullable|string',
-            // 'userRating' => 'nullable|string',
-            // 'userFcmToken' => 'nullable|string',
-            // 'userRatingList' => 'nullable|array',
-            // 'favoritesList' => 'nullable|array',
-            // 'personalList' => 'nullable|array',

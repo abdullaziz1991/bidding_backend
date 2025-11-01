@@ -12,7 +12,6 @@ class FetchBiddingDetailsController extends Controller
 {
     public function fetchBiddingDetails(Request $request)
     {
-        // التحقق من صحة البيانات
         $validator = Validator::make($request->all(), [
             'product_id' => 'required|integer',
         ]);
@@ -26,8 +25,6 @@ class FetchBiddingDetailsController extends Controller
 
         try {
             $productId = $request->input('product_id');
-
-            // تنفيذ الاستعلام
             $bidding = DB::table('biddings')
                 ->select('bidding_details', 'biddingDays', 'biddingEndDate', 'comments')
                 ->where('product_id', $productId)
@@ -39,17 +36,7 @@ class FetchBiddingDetailsController extends Controller
                     'Status' => 'No bidding data found'
                 ], 404);
             }
-
-            // إضافة الوقت الحالي
-            // $bidding->serverDateTime = now()->format('Y-m-d\TH:i:s.u');
-        //   $bidding->serverDateTime = Carbon::now('Asia/Damascus')->format('Y-m-d\TH:i:s.u');
-        
          $bidding->serverDateTime = Carbon::now('Asia/Damascus')->toIso8601String();
-        //   $bidding->serverDateTime = Carbon::now('Asia/Damascus')->format('Y-m-d\TH:i:s.uP');
-
-
-
-
             return response()->json([
                 'Result' => $bidding
             ], 200);

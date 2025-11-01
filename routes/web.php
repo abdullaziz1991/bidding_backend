@@ -3,14 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Services\NotificationService;
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 
 Route::get('/reset-password-form', function () {
     return view('reset-password-form');
@@ -28,7 +22,6 @@ Route::post('/submit-reset-password', function (\Illuminate\Http\Request $reques
         'password' => 'required|confirmed|min:6',
     ]);
 
-    // التحقق من وجود السجل
     $reset = DB::table('password_resets')
         ->where('email', $request->email)
         ->first();
@@ -47,12 +40,9 @@ Route::post('/submit-reset-password', function (\Illuminate\Http\Request $reques
 
     $user->save();
 
-    // حذف سجل التحقق
     DB::table('password_resets')->where('email', $request->email)->delete();
     
      $user->tokens()->delete();
-
-    
     try {
         
           $notificationService = new NotificationService();
@@ -62,17 +52,10 @@ Route::post('/submit-reset-password', function (\Illuminate\Http\Request $reques
        "Successfully changed your password"
         );
    
-    
-
     Log::info("✅ تم إدخال إشعار جديد للمستخدم ID: {$user->id}", $newNotification);
 } catch (\Exception $e) {
     Log::error("❌ فشل إدخال الإشعار: " . $e->getMessage());
 }
 
-
-    // return response()->json(['message' => 'تم إعادة تعيين كلمة المرور بنجاح.']);
 return redirect('/password-reset-success');
-
-    
-    
 });

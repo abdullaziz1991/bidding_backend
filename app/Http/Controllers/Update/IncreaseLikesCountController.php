@@ -14,10 +14,9 @@ class IncreaseLikesCountController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'productId'      => 'required|integer|exists:products,productId',
-            // 'productLikes'   => 'required|integer',
             'productLikes' => 'required|integer|min:0',
             'id'         => 'required|integer|exists:users,id',
-            'FavoritesList'  => 'required|string', // لأنه جايك JSON نص
+            'FavoritesList'  => 'required|string', 
         ]);
 
         if ($validator->fails()) {
@@ -30,9 +29,7 @@ class IncreaseLikesCountController extends Controller
         $productId      = $request->input('productId');
         $productLikes   = $request->input('productLikes');
         $id         = $request->input('id');
-        $favoritesList  = $request->input('FavoritesList'); // جاي JSON نص
-
-        // نحول النص JSON إلى مصفوفة
+        $favoritesList  = $request->input('FavoritesList');
         $favoritesArray = json_decode($favoritesList, true);
 
         if (!is_array($favoritesArray)) {
@@ -40,8 +37,6 @@ class IncreaseLikesCountController extends Controller
                 'Status' => 'Invalid FavoritesList format',
             ], 400);
         }
-
-        // نعيد ترميزها بشكل نظيف قبل التخزين
         $favoritesListJson = json_encode($favoritesArray);
 
         try {

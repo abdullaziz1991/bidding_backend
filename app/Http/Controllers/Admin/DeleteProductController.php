@@ -12,7 +12,7 @@ class DeleteProductController extends Controller
     public function delete(Request $request)
     {
         try {
-            // التحقق من البيانات المدخلة
+     
             $validator = Validator::make($request->all(), [
                 'ProductId' => 'required|integer|min:1',
                 'adminEmail' => 'required|email',
@@ -30,14 +30,14 @@ class DeleteProductController extends Controller
             $adminEmail = $request->input('adminEmail');
             $productImages = $request->input('ProductImages');
 
-            // تحميل قائمة المشرفين
+        
             $supervisorEmails = include base_path('services/AdminList.php');
 
             if (!in_array($adminEmail, $supervisorEmails)) {
                 return response()->json(['Status' => 'Not authorized'], 403);
             }
 
-            // حذف الصور إذا كانت موجودة
+    
             if (!empty($productImages)) {
                 $productImages = str_replace("'", '"', $productImages); // إصلاح التنسيق
                 $imagesArray = json_decode($productImages, true);
@@ -53,9 +53,6 @@ class DeleteProductController extends Controller
                     }
                 }
             }
-
-
-            // تنفيذ عملية الحذف داخل Transaction
             DB::beginTransaction();
 
             DB::table('products')->where('productId', $productId)->delete();

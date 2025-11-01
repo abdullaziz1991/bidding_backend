@@ -13,7 +13,6 @@ class FetchPersonalListController extends Controller
 {
     public function fetchPersonalList(Request $request)
     {
-        // التحقق من المعطيات
         $validator = Validator::make($request->all(), [
             'personalList' => 'required',
             'userId' => 'required|integer',
@@ -29,8 +28,6 @@ class FetchPersonalListController extends Controller
         $personalListRaw = $request->input('personalList');
         $userId = $request->input('userId');
         $productIds = [];
-
-        // فك الترميز إذا كانت String (JSON)
         if (is_string($personalListRaw)) {
             $decoded = json_decode($personalListRaw, true);
             if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
@@ -45,11 +42,7 @@ class FetchPersonalListController extends Controller
                 'Status' => 'Invalid or empty product list'
             ], 400);
         }
-
-        // وقت السيرفر موحد
         $now = Carbon::now('Asia/Damascus')->toIso8601String();
-
-        // جلب المنتجات مع join على جدول biddings
         $products = Product::select('products.*', 'biddings.biddingEndDate', 'biddings.bidding_details')
             ->leftJoin('biddings', 'products.productId', '=', 'biddings.product_id')
             ->with(['seller:id,userName,userGender,userImage,userRating,userRatingList'])
@@ -57,24 +50,15 @@ class FetchPersonalListController extends Controller
             ->get()
             ->map(function ($product) use ($now) {
                 $productArray = $product->toArray();
-
-                // دمج بيانات البائع
                 if (isset($productArray['seller'])) {
                     $sellerData = $productArray['seller'];
                     unset($productArray['seller']);
                     $productArray = array_merge($productArray, $sellerData);
                 }
-
-                // إضافة الوقت الحالي
                 $productArray['serverDateTime'] = $now;
-
                 return $productArray;
             });
-
-        // ids اللي فعليًا موجودة بالـ DB
         $validIds = $products->pluck('productId')->toArray();
-
-        // تحديث عمود personalList في users
         User::where('id', $userId)->update([
             'personalList' => json_encode($validIds) // نخزنها كـ JSON
         ]);

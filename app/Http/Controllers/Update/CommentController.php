@@ -14,19 +14,14 @@ class CommentController extends Controller
             // استخراج البيانات من الطلب
             $productId = $request->input('product_id');
             $comments = $request->input('comments');
-
             if (!$productId || !$comments) {
                 return response()->json(['Status' => 'Missing required parameters'], 400);
             }
-
-            // التحقق من وجود المنتج
             $exists = DB::table('biddings')->where('product_id', $productId)->exists();
 
             if (!$exists) {
                 return response()->json(['Status' => 'Product not found'], 404);
             }
-
-            // تنفيذ التحديث باستخدام Query Builder
             $updated = DB::table('biddings')
                 ->where('product_id', $productId)
                 ->update(['comments' => $comments]);

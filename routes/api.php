@@ -24,9 +24,6 @@ use App\Http\Controllers\Update\IncreaseLikesCountController;
 use App\Http\Controllers\Update\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
-use Illuminate\Http\Request;
-use Laravel\Sanctum\PersonalAccessToken;
-use Illuminate\Support\Str;
 use App\Http\Controllers\Auth\SingInWithGoogleController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\VerificationController;
@@ -46,31 +43,23 @@ Route::post('/auth-reset', [PasswordResetController::class, 'sendResetLink']);
 //  Route::post('/submit-reset-password', [PasswordResetController::class, 'submitResetPassword']);
 
 //  php artisan make:migration create_password_resets_table   
-
 Route::post('/auth-google', [SingInWithGoogleController::class, 'googleSignIn']);
 
 
-        Route::post('/verify-email', [VerificationController::class, 'sendVerificationEmail']);
-       Route::get('/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
-
-// Route::get('/login', function () {
-//     return response()->json(['message' => 'Login not implemented in API']);
-// })->name('login');
-  Route::post('/auth-signOut', [SignOutController::class, 'signOut']);
-
-
+Route::post('/verify-email', [VerificationController::class, 'sendVerificationEmail']);
+Route::get('/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::post('/auth-signOut', [SignOutController::class, 'signOut']);
 
 Route::post('/notifications/add', [NotificationController::class, 'add']);
 
- Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
 // Route::middleware('ManualSanctumAuth')->group(function () {
 
     // Insert
     Route::post('/insert-product', [ProductController::class, 'store']);
     // http://192.168.1.130:8000/api/products?sellerId=1&sellerNumber=963946523882&productCategory=1&productTitle=asd&productDetails=asdR&productImage=["compressed_Screenshot_20250407-182228_Telegram.jpg"]&productImageNumber=1&productPrice=1.0&productDateTime=2025-05-20 12:51:26.654295&productStatus=1&productStatusRatio=100&productAmount=1&biddingDays=1&productCurrency=1&productCountry=1&bidDetails=[{"bidder_id":"1","country_flag":"SY","bid_amount":1.0,"bid_time":"2025-05-20T12:51:26.654670"}]&productCity=1
-      Route::post('/insert-notification', [InsertNotificationController::class, 'store']);
- 
- 
+    Route::post('/insert-notification', [InsertNotificationController::class, 'store']);
+
     // Select
     Route::get('/fetch-Products', [FetchProductsController::class, 'fetch']);
     // http://192.168.1.130:8000/api/products/fetch?search&productCategory=0&offset=0&userId=1&sortBy=recently added
@@ -80,7 +69,6 @@ Route::post('/notifications/add', [NotificationController::class, 'add']);
     // http://192.168.1.130:8000/api/fetch-biddingDetails?product_id=1
     Route::get('/fetch-favorriteList', [FetchFavoriteListController::class, 'fetchFavoriteList']);
    
-
     // Update
     Route::put('/update-favoriteList', [FavoritesListController::class, 'updateFavoritesList']);
     // http://192.168.1.130:8000/api/update-favoriteList?UserId=1&FavoritesList=[]
@@ -99,8 +87,6 @@ Route::post('/notifications/add', [NotificationController::class, 'add']);
     // Delete
     Route::delete('/delete-Product', [DeleteProductController::class, 'deleteProduct']);
     
-    
-
     // Services
     Route::post('/service-UploadImages', [UploadImagesController::class, 'uploadImages']);
     // http://192.168.1.130:8000/api/service-UploadImages
@@ -109,8 +95,7 @@ Route::post('/notifications/add', [NotificationController::class, 'add']);
   
     // Notifications
     Route::post('/update-statusReadNotification', [UpdateNotificationStatus::class, 'markAsRead']);
-     Route::get('/fetch-notifications', [FetchAllNotification::class, 'fetch']);
-
+    Route::get('/fetch-notifications', [FetchAllNotification::class, 'fetch']);
 
     // Admin
     Route::get('/admin-FetchUnapprovedProducts', [FetchProductApprovmentController::class, 'fetchUnapprovedProducts']);
